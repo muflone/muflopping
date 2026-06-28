@@ -25,6 +25,7 @@ import com.muflone.muflopping.R
 import com.muflone.muflopping.data.api.RetrofitClient
 import com.muflone.muflopping.data.model.Product
 import com.muflone.muflopping.data.model.ProductCategory
+import com.muflone.muflopping.data.model.ProductUnit
 import com.muflone.muflopping.data.repository.ShoppingRepository
 import com.muflone.muflopping.databinding.FragmentProductPickerBinding
 import com.muflone.muflopping.ui.detail.ListDetailViewModel
@@ -80,6 +81,7 @@ class ProductPickerFragment : Fragment() {
     private var productToItemMap: Map<Int, Int> = emptyMap()
     private var allCategories: List<ProductCategory> = emptyList()
     private var allProducts: List<Product> = emptyList()
+    private var allUnits: List<ProductUnit> = emptyList()
     private var isGridView: Boolean = false
     private var selectedCategoryName: String? = null
 
@@ -156,10 +158,12 @@ class ProductPickerFragment : Fragment() {
         binding.swipeRefresh.setOnRefreshListener {
             viewModel.fetchProducts()
             viewModel.fetchGlobalCategories()
+            viewModel.fetchUnits()
         }
 
         viewModel.fetchProducts()
         viewModel.fetchGlobalCategories()
+        viewModel.fetchUnits()
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
 
@@ -286,14 +290,53 @@ class ProductPickerFragment : Fragment() {
         }
     }
 
+    private fun showAddItemDialog(product: Product) {
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_item_edit, null)
+        val etQuantity = dialogView.findViewById<EditText>(R.id.etQuantity)
+        val etNote = dialogView.findViewById<EditText>(R.id.etNote)
+
+        etQuantity.setText("1")
+        
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Add ${product.name}")
+            .setView(dialogView)
+            .setPositiveButton("Add") { _, _ ->
+                val quantity = etQuantity.text.toString()
+                val note = etNote.text.toString()
+                viewModel.addProductToList(listId, product.id, quantity, note)
+            }
+            .setNegativeButton("Cancel", null)
+            .create()
+
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+        dialog.show()
+
+        etQuantity.requestFocus()
+        etQuantity.setSelection(etQuantity.text.length)
+    }
+
     private fun showProductOptionsDialog(product: Product) {
-        val options = arrayOf("Edit", "Delete")
+        val itemId = productToItemMap[product.id]
+        val options = mutableListOf<String>()
+        
+        if (itemId != null) {
+            options.add("Add to list (another)")
+        } else {
+            options.add("Add with notes")
+        }
+        
+        if (!product.isGlobal) {
+            options.add("Edit product")
+            options.add("Delete product")
+        }
+
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(product.name)
-            .setItems(options) { _, which ->
-                when (which) {
-                    0 -> showProductDialog(product)
-                    1 -> viewModel.deleteProduct(product.id)
+            .setItems(options.toTypedArray()) { _, which ->
+                when (options[which]) {
+                    "Add to list (another)", "Add with notes" -> showAddItemDialog(product)
+                    "Edit product" -> showProductDialog(product)
+                    "Delete product" -> viewModel.deleteProduct(product.id)
                 }
             }
             .show()
@@ -305,6 +348,7 @@ class ProductPickerFragment : Fragment() {
         val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_product_edit, null)
         val etName = dialogView.findViewById<EditText>(R.id.etProductName)
         val actvCategory = dialogView.findViewById<AutoCompleteTextView>(R.id.actvCategory)
+        val actvUnit = dialogView.findViewById<AutoCompleteTextView>(R.id.actvUnit)
         dialogProductImageView = dialogView.findViewById(R.id.ivProductImage)
         val btnGallery = dialogView.findViewById<Button>(R.id.btnGallery)
         val btnCamera = dialogView.findViewById<Button>(R.id.btnCamera)
@@ -320,11 +364,22 @@ class ProductPickerFragment : Fragment() {
         val categoryAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, categoryNames)
         actvCategory.setAdapter(categoryAdapter)
         
+        val unitNames = allUnits.map { it.name }
+        val unitAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, unitNames)
+        actvUnit.setAdapter(unitAdapter)
+
         if (product != null) {
             val currentCategory = allCategories.find { it.id == product.category }
             actvCategory.setText(currentCategory?.name, false)
-        } else if (selectedCategoryName != null) {
-            actvCategory.setText(selectedCategoryName, false)
+            val currentUnit = allUnits.find { it.id == product.unit }
+            actvUnit.setText(currentUnit?.name, false)
+        } else {
+            if (selectedCategoryName != null) {
+                actvCategory.setText(selectedCategoryName, false)
+            }
+            if (unitNames.isNotEmpty()) {
+                actvUnit.setText(unitNames[0], false)
+            }
         }
 
         val isGlobal = product?.isGlobal ?: false
@@ -334,6 +389,7 @@ class ProductPickerFragment : Fragment() {
             btnSearch.isEnabled = false
             etName.isEnabled = false
             actvCategory.isEnabled = false
+            actvUnit.isEnabled = false
         }
 
         btnGallery.setOnClickListener {
@@ -365,16 +421,18 @@ class ProductPickerFragment : Fragment() {
                 val name = etName.text.toString()
                 val categoryName = actvCategory.text.toString()
                 val selectedCategory = allCategories.find { it.name == categoryName }
+                val unitName = actvUnit.text.toString()
+                val selectedUnit = allUnits.find { it.name == unitName }
 
-                if (name.isNotBlank() && selectedCategory != null) {
+                if (name.isNotBlank() && selectedCategory != null && selectedUnit != null) {
                     val imagePart = prepareImagePart()
                     if (product == null) {
-                        viewModel.createProduct(name, selectedCategory.id, imagePart)
+                        viewModel.createProduct(name, selectedCategory.id, selectedUnit.id, imagePart)
                     } else {
-                        viewModel.updateProduct(product.id, name, selectedCategory.id, imagePart)
+                        viewModel.updateProduct(product.id, name, selectedCategory.id, selectedUnit.id, imagePart)
                     }
                 } else {
-                    Toast.makeText(context, "Name and category are required", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Name, category and unit are required", Toast.LENGTH_SHORT).show()
                 }
             }
             .setNegativeButton("Cancel", null)
@@ -460,6 +518,12 @@ class ProductPickerFragment : Fragment() {
         viewModel.categories.observe(viewLifecycleOwner) { result ->
             if (result.isSuccess) {
                 allCategories = result.getOrNull() ?: emptyList()
+            }
+        }
+
+        viewModel.units.observe(viewLifecycleOwner) { result ->
+            if (result.isSuccess) {
+                allUnits = result.getOrNull() ?: emptyList()
             }
         }
 

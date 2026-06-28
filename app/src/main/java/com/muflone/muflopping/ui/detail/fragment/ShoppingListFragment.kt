@@ -19,6 +19,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.muflone.muflopping.R
 import com.muflone.muflopping.data.api.RetrofitClient
 import com.muflone.muflopping.data.model.Item
+import com.muflone.muflopping.data.model.ProductUnit
 import com.muflone.muflopping.data.model.ShoppingListDetail
 import com.muflone.muflopping.data.repository.ShoppingRepository
 import com.muflone.muflopping.databinding.FragmentShoppingListBinding
@@ -47,6 +48,7 @@ class ShoppingListFragment : Fragment() {
 
     private lateinit var adapter: ListDetailAdapter
     private var listId: Int = -1
+    private var allUnits: List<ProductUnit> = emptyList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,9 +73,11 @@ class ShoppingListFragment : Fragment() {
 
         binding.swipeRefresh.setOnRefreshListener {
             viewModel.fetchListDetail(listId)
+            viewModel.fetchUnits()
         }
 
         viewModel.fetchListDetail(listId)
+        viewModel.fetchUnits()
     }
 
     fun reload() {
@@ -175,20 +179,21 @@ class ShoppingListFragment : Fragment() {
         etQuantity.setText(item.quantity)
         etNote.setText(item.note)
         
-        val units = arrayOf("pcs", "kg", "g", "l", "ml", "pack")
-        val unitAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, units)
+        val unitNames = allUnits.map { it.name }
+        val unitAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, unitNames)
         actvUnit.setAdapter(unitAdapter)
-        actvUnit.setText(item.unit, false)
+        actvUnit.setText(item.unitName, false)
 
         val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Edit ${item.productName}")
             .setView(dialogView)
             .setPositiveButton("Save") { _, _ ->
                 val quantity = etQuantity.text.toString()
-                val unit = actvUnit.text.toString()
+                val unitName = actvUnit.text.toString()
+                val selectedUnit = allUnits.find { it.name == unitName }
                 val note = etNote.text.toString()
                 if (quantity.isNotBlank()) {
-                    viewModel.updateItemInList(listId, item.id, quantity, unit, note)
+                    viewModel.updateItemInList(listId, item.id, quantity, selectedUnit?.id, note)
                 }
             }
             .setNeutralButton("Remove") { _, _ ->
@@ -216,6 +221,10 @@ class ShoppingListFragment : Fragment() {
             } else {
                 Toast.makeText(context, "Error: ${result.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        viewModel.units.observe(viewLifecycleOwner) { units ->
+            allUnits = units
         }
 
         viewModel.operationResult.observe(viewLifecycleOwner) { result ->

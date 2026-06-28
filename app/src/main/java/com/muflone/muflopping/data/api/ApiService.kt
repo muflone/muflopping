@@ -14,6 +14,9 @@ interface ApiService {
     @GET("categories/")
     suspend fun getGlobalCategories(): Response<List<ProductCategory>>
 
+    @GET("units/")
+    suspend fun getUnits(): Response<List<ProductUnit>>
+
     @GET("products/")
     suspend fun getProducts(): Response<List<Product>>
 
@@ -22,6 +25,7 @@ interface ApiService {
     suspend fun createProduct(
         @Part("name") name: okhttp3.RequestBody,
         @Part("category") category: okhttp3.RequestBody,
+        @Part("unit") unit: okhttp3.RequestBody,
         @Part image: okhttp3.MultipartBody.Part? = null
     ): Response<Product>
 
@@ -31,6 +35,7 @@ interface ApiService {
         @Path("productId") productId: Int,
         @Part("name") name: okhttp3.RequestBody? = null,
         @Part("category") category: okhttp3.RequestBody? = null,
+        @Part("unit") unit: okhttp3.RequestBody? = null,
         @Part image: okhttp3.MultipartBody.Part? = null
     ): Response<Product>
 

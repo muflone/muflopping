@@ -19,6 +19,9 @@ class ProductViewModel(private val repository: ShoppingRepository) : ViewModel()
     private val _categories = MutableLiveData<Result<List<ProductCategory>>>()
     val categories: LiveData<Result<List<ProductCategory>>> = _categories
 
+    private val _units = MutableLiveData<Result<List<com.muflone.muflopping.data.model.ProductUnit>>>()
+    val units: LiveData<Result<List<com.muflone.muflopping.data.model.ProductUnit>>> = _units
+
     private val _itemAdded = MutableLiveData<Result<Item>>()
     val itemAdded: LiveData<Result<Item>> = _itemAdded
 
@@ -39,16 +42,23 @@ class ProductViewModel(private val repository: ShoppingRepository) : ViewModel()
         }
     }
 
-    fun addProductToList(listId: Int, productId: Int) {
+    fun fetchUnits() {
         viewModelScope.launch {
-            val result = repository.addItemToList(listId, productId)
+            val result = repository.getUnits()
+            _units.value = result
+        }
+    }
+
+    fun addProductToList(listId: Int, productId: Int, quantity: String? = null, unit: Int? = null, note: String? = null) {
+        viewModelScope.launch {
+            val result = repository.addItemToList(listId, productId, quantity, unit, note)
             _itemAdded.value = result
         }
     }
 
-    fun createProduct(name: String, categoryId: Int, imagePart: MultipartBody.Part?) {
+    fun createProduct(name: String, categoryId: Int, unitId: Int, imagePart: MultipartBody.Part?) {
         viewModelScope.launch {
-            val result = repository.createProduct(name, categoryId, imagePart)
+            val result = repository.createProduct(name, categoryId, unitId, imagePart)
             if (result.isSuccess) {
                 _productOperationResult.value = Result.success(Unit)
                 fetchProducts()
@@ -58,9 +68,9 @@ class ProductViewModel(private val repository: ShoppingRepository) : ViewModel()
         }
     }
 
-    fun updateProduct(productId: Int, name: String?, categoryId: Int?, imagePart: MultipartBody.Part?) {
+    fun updateProduct(productId: Int, name: String?, categoryId: Int?, unitId: Int?, imagePart: MultipartBody.Part?) {
         viewModelScope.launch {
-            val result = repository.updateProduct(productId, name, categoryId, imagePart)
+            val result = repository.updateProduct(productId, name, categoryId, unitId, imagePart)
             if (result.isSuccess) {
                 _productOperationResult.value = Result.success(Unit)
                 fetchProducts()

@@ -9,6 +9,8 @@ data class Product(
     val name: String,
     val category: Int,
     @Json(name = "category_name") val categoryName: String,
+    val unit: Int = 0,
+    @Json(name = "unit_name") val unitName: String = "",
     val image: String? = null,
     @Json(name = "is_global") val isGlobal: Boolean,
     @Json(name = "created_at") val createdAt: String

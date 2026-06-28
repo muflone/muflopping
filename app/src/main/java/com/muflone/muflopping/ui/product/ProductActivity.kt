@@ -55,6 +55,7 @@ class ProductActivity : AppCompatActivity() {
     private var existingProductIds: List<Int> = emptyList()
     private var allCategories: List<ProductCategory> = emptyList()
     private var allProducts: List<Product> = emptyList()
+    private var allUnits: List<com.muflone.muflopping.data.model.ProductUnit> = emptyList()
     private var isGridView: Boolean = false
     private var selectedCategoryName: String? = null
 
@@ -114,10 +115,12 @@ class ProductActivity : AppCompatActivity() {
         binding.swipeRefresh.setOnRefreshListener {
             viewModel.fetchProducts()
             viewModel.fetchGlobalCategories()
+            viewModel.fetchUnits()
         }
 
         viewModel.fetchProducts()
         viewModel.fetchGlobalCategories()
+        viewModel.fetchUnits()
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -269,6 +272,7 @@ class ProductActivity : AppCompatActivity() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_product_edit, null)
         val etName = dialogView.findViewById<EditText>(R.id.etProductName)
         val actvCategory = dialogView.findViewById<AutoCompleteTextView>(R.id.actvCategory)
+        val actvUnit = dialogView.findViewById<AutoCompleteTextView>(R.id.actvUnit)
         dialogProductImageView = dialogView.findViewById(R.id.ivProductImage)
         val btnGallery = dialogView.findViewById<Button>(R.id.btnGallery)
         val btnCamera = dialogView.findViewById<Button>(R.id.btnCamera)
@@ -284,11 +288,22 @@ class ProductActivity : AppCompatActivity() {
         val categoryAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categoryNames)
         actvCategory.setAdapter(categoryAdapter)
         
+        val unitNames = allUnits.map { it.name }
+        val unitAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, unitNames)
+        actvUnit.setAdapter(unitAdapter)
+
         if (product != null) {
             val currentCategory = allCategories.find { it.id == product.category }
             actvCategory.setText(currentCategory?.name, false)
-        } else if (selectedCategoryName != null) {
-            actvCategory.setText(selectedCategoryName, false)
+            val currentUnit = allUnits.find { it.id == product.unit }
+            actvUnit.setText(currentUnit?.name, false)
+        } else {
+            if (selectedCategoryName != null) {
+                actvCategory.setText(selectedCategoryName, false)
+            }
+            if (unitNames.isNotEmpty()) {
+                actvUnit.setText(unitNames[0], false)
+            }
         }
 
         val isGlobal = product?.isGlobal ?: false
@@ -298,6 +313,7 @@ class ProductActivity : AppCompatActivity() {
             btnSearch.isEnabled = false
             etName.isEnabled = false
             actvCategory.isEnabled = false
+            actvUnit.isEnabled = false
         }
 
         btnGallery.setOnClickListener {
@@ -322,16 +338,18 @@ class ProductActivity : AppCompatActivity() {
                 val name = etName.text.toString()
                 val categoryName = actvCategory.text.toString()
                 val selectedCategory = allCategories.find { it.name == categoryName }
+                val unitName = actvUnit.text.toString()
+                val selectedUnit = allUnits.find { it.name == unitName }
 
-                if (name.isNotBlank() && selectedCategory != null) {
+                if (name.isNotBlank() && selectedCategory != null && selectedUnit != null) {
                     val imagePart = prepareImagePart()
                     if (product == null) {
-                        viewModel.createProduct(name, selectedCategory.id, imagePart)
+                        viewModel.createProduct(name, selectedCategory.id, selectedUnit.id, imagePart)
                     } else {
-                        viewModel.updateProduct(product.id, name, selectedCategory.id, imagePart)
+                        viewModel.updateProduct(product.id, name, selectedCategory.id, selectedUnit.id, imagePart)
                     }
                 } else {
-                    Toast.makeText(this, "Name and category are required", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Name, category and unit are required", Toast.LENGTH_SHORT).show()
                 }
             }
             .setNegativeButton("Cancel", null)
@@ -402,6 +420,12 @@ class ProductActivity : AppCompatActivity() {
         viewModel.categories.observe(this) { result ->
             if (result.isSuccess) {
                 allCategories = result.getOrNull() ?: emptyList()
+            }
+        }
+
+        viewModel.units.observe(this) { result ->
+            if (result.isSuccess) {
+                allUnits = result.getOrNull() ?: emptyList()
             }
         }
 

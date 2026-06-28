@@ -73,7 +73,7 @@ class ListDetailAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Item) {
             binding.tvProductName.text = item.productName
-            binding.tvQuantity.text = "${item.quantity} ${item.unit}"
+            binding.tvQuantity.text = "${item.quantity} ${item.unitName}"
             
             if (item.isChecked) {
                 binding.tvProductName.paintFlags = binding.tvProductName.paintFlags or android.graphics.Paint.STRIKE_THRU_TEXT_FLAG

@@ -125,11 +125,25 @@ class ShoppingRepository(
         }
     }
 
-    suspend fun createProduct(name: String, categoryId: Int, imagePart: MultipartBody.Part?): Result<Product> {
+    suspend fun getUnits(): Result<List<ProductUnit>> {
+        return try {
+            val response = getService().getUnits()
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!.sortedBy { it.order })
+            } else {
+                Result.failure(Exception("Failed to fetch units: ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun createProduct(name: String, categoryId: Int, unitId: Int, imagePart: MultipartBody.Part?): Result<Product> {
         return try {
             val nameBody = name.toRequestBody("text/plain".toMediaTypeOrNull())
             val categoryBody = categoryId.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-            val response = getService().createProduct(nameBody, categoryBody, imagePart)
+            val unitBody = unitId.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+            val response = getService().createProduct(nameBody, categoryBody, unitBody, imagePart)
             if (response.isSuccessful && response.body() != null) {
                 Result.success(response.body()!!)
             } else {
@@ -140,11 +154,12 @@ class ShoppingRepository(
         }
     }
 
-    suspend fun updateProduct(productId: Int, name: String?, categoryId: Int?, imagePart: MultipartBody.Part?): Result<Product> {
+    suspend fun updateProduct(productId: Int, name: String?, categoryId: Int?, unitId: Int?, imagePart: MultipartBody.Part?): Result<Product> {
         return try {
             val nameBody = name?.toRequestBody("text/plain".toMediaTypeOrNull())
             val categoryBody = categoryId?.toString()?.toRequestBody("text/plain".toMediaTypeOrNull())
-            val response = getService().updateProduct(productId, nameBody, categoryBody, imagePart)
+            val unitBody = unitId?.toString()?.toRequestBody("text/plain".toMediaTypeOrNull())
+            val response = getService().updateProduct(productId, nameBody, categoryBody, unitBody, imagePart)
             if (response.isSuccessful && response.body() != null) {
                 Result.success(response.body()!!)
             } else {
@@ -168,9 +183,9 @@ class ShoppingRepository(
         }
     }
 
-    suspend fun addItemToList(listId: Int, productId: Int): Result<Item> {
+    suspend fun addItemToList(listId: Int, productId: Int, quantity: String? = null, unit: Int? = null, note: String? = null): Result<Item> {
         return try {
-            val response = getService().createItem(listId, AddItemRequest(product = productId))
+            val response = getService().createItem(listId, AddItemRequest(product = productId, quantity = quantity, unit = unit, note = note))
             if (response.isSuccessful && response.body() != null) {
                 Result.success(response.body()!!)
             } else {
@@ -181,7 +196,7 @@ class ShoppingRepository(
         }
     }
 
-    suspend fun updateItemInList(listId: Int, itemId: Int, quantity: String? = null, unit: String? = null, note: String? = null): Result<Item> {
+    suspend fun updateItemInList(listId: Int, itemId: Int, quantity: String? = null, unit: Int? = null, note: String? = null): Result<Item> {
         return try {
             val response = getService().updateItemInList(listId, itemId, UpdateItemRequest(quantity, unit, note = note))
             if (response.isSuccessful && response.body() != null) {

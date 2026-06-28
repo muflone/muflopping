@@ -11,20 +11,24 @@ data class Item(
     @Json(name = "product_image") val productImage: String? = null,
     @Json(name = "product_category") val productCategory: String,
     val quantity: String,
-    val unit: String,
+    val unit: Int,
+    @Json(name = "unit_name") val unitName: String = "",
     @Json(name = "is_checked") val isChecked: Boolean,
     val note: String = ""
 )
 
 @JsonClass(generateAdapter = true)
 data class AddItemRequest(
-    @Json(name = "product") val product: Int
+    @Json(name = "product") val product: Int,
+    val quantity: String? = null,
+    val unit: Int? = null,
+    val note: String? = null
 )
 
 @JsonClass(generateAdapter = true)
 data class UpdateItemRequest(
     val quantity: String? = null,
-    val unit: String? = null,
+    val unit: Int? = null,
     @Json(name = "is_checked") val isChecked: Boolean? = null,
     val note: String? = null
 )
