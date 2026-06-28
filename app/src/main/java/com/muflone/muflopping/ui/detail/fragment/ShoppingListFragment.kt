@@ -173,27 +173,19 @@ class ShoppingListFragment : Fragment() {
     private fun showEditItemDialog(item: Item) {
         val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_item_edit, null)
         val etQuantity = dialogView.findViewById<EditText>(R.id.etQuantity)
-        val actvUnit = dialogView.findViewById<AutoCompleteTextView>(R.id.actvUnit)
         val etNote = dialogView.findViewById<EditText>(R.id.etNote)
 
         etQuantity.setText(item.quantity)
         etNote.setText(item.note)
         
-        val unitNames = allUnits.map { it.name }
-        val unitAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, unitNames)
-        actvUnit.setAdapter(unitAdapter)
-        actvUnit.setText(item.unitName, false)
-
         val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Edit ${item.productName}")
             .setView(dialogView)
             .setPositiveButton("Save") { _, _ ->
                 val quantity = etQuantity.text.toString()
-                val unitName = actvUnit.text.toString()
-                val selectedUnit = allUnits.find { it.name == unitName }
                 val note = etNote.text.toString()
                 if (quantity.isNotBlank()) {
-                    viewModel.updateItemInList(listId, item.id, quantity, selectedUnit?.id, note)
+                    viewModel.updateItemInList(listId, item.id, quantity, note)
                 }
             }
             .setNeutralButton("Remove") { _, _ ->

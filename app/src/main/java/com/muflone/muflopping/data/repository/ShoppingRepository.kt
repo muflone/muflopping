@@ -183,9 +183,9 @@ class ShoppingRepository(
         }
     }
 
-    suspend fun addItemToList(listId: Int, productId: Int, quantity: String? = null, unit: Int? = null, note: String? = null): Result<Item> {
+    suspend fun addItemToList(listId: Int, productId: Int, quantity: String? = null, note: String? = null): Result<Item> {
         return try {
-            val response = getService().createItem(listId, AddItemRequest(product = productId, quantity = quantity, unit = unit, note = note))
+            val response = getService().createItem(listId, AddItemRequest(product = productId, quantity = quantity, note = note))
             if (response.isSuccessful && response.body() != null) {
                 Result.success(response.body()!!)
             } else {
@@ -196,9 +196,9 @@ class ShoppingRepository(
         }
     }
 
-    suspend fun updateItemInList(listId: Int, itemId: Int, quantity: String? = null, unit: Int? = null, note: String? = null): Result<Item> {
+    suspend fun updateItemInList(listId: Int, itemId: Int, quantity: String? = null, note: String? = null): Result<Item> {
         return try {
-            val response = getService().updateItemInList(listId, itemId, UpdateItemRequest(quantity, unit, note = note))
+            val response = getService().updateItemInList(listId, itemId, UpdateItemRequest(quantity, note = note))
             if (response.isSuccessful && response.body() != null) {
                 Result.success(response.body()!!)
             } else {

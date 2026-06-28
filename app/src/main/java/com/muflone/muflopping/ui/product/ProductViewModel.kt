@@ -49,9 +49,9 @@ class ProductViewModel(private val repository: ShoppingRepository) : ViewModel()
         }
     }
 
-    fun addProductToList(listId: Int, productId: Int, quantity: String? = null, unit: Int? = null, note: String? = null) {
+    fun addProductToList(listId: Int, productId: Int, quantity: String? = null, note: String? = null) {
         viewModelScope.launch {
-            val result = repository.addItemToList(listId, productId, quantity, unit, note)
+            val result = repository.addItemToList(listId, productId, quantity, note)
             _itemAdded.value = result
         }
     }

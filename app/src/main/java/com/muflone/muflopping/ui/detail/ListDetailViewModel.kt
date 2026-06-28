@@ -36,9 +36,9 @@ class ListDetailViewModel(private val repository: ShoppingRepository) : ViewMode
         }
     }
 
-    fun addItemToList(listId: Int, productId: Int, quantity: String? = null, unit: Int? = null, note: String? = null) {
+    fun addItemToList(listId: Int, productId: Int, quantity: String? = null, note: String? = null) {
         viewModelScope.launch {
-            val result = repository.addItemToList(listId, productId, quantity, unit, note)
+            val result = repository.addItemToList(listId, productId, quantity, note)
             if (result.isSuccess) {
                 _operationResult.value = Result.success(Unit)
                 fetchListDetail(listId)
@@ -48,9 +48,9 @@ class ListDetailViewModel(private val repository: ShoppingRepository) : ViewMode
         }
     }
 
-    fun updateItemInList(listId: Int, itemId: Int, quantity: String? = null, unit: Int? = null, note: String? = null) {
+    fun updateItemInList(listId: Int, itemId: Int, quantity: String? = null, note: String? = null) {
         viewModelScope.launch {
-            val result = repository.updateItemInList(listId, itemId, quantity, unit, note)
+            val result = repository.updateItemInList(listId, itemId, quantity, note)
             if (result.isSuccess) {
                 _operationResult.value = Result.success(Unit)
                 fetchListDetail(listId)

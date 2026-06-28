@@ -117,13 +117,9 @@ class ProductAdapter(
                 error(android.R.drawable.ic_menu_report_image)
             }
 
-            if (!product.isGlobal) {
-                binding.root.setOnLongClickListener {
-                    onProductLongClick(product)
-                    true
-                }
-            } else {
-                binding.root.setOnLongClickListener(null)
+            binding.root.setOnLongClickListener {
+                onProductLongClick(product)
+                true
             }
         }
     }
@@ -156,13 +152,9 @@ class ProductAdapter(
                 error(android.R.drawable.ic_menu_report_image)
             }
 
-            if (!product.isGlobal) {
-                binding.root.setOnLongClickListener {
-                    onProductLongClick(product)
-                    true
-                }
-            } else {
-                binding.root.setOnLongClickListener(null)
+            binding.root.setOnLongClickListener {
+                onProductLongClick(product)
+                true
             }
         }
     }
