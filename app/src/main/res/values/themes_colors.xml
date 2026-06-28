@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- RED -->
+    <style name="Theme.Muflopping.RED" parent="Theme.Muflopping">
+        <item name="colorPrimary">@color/md_red_500</item>
+        <item name="colorPrimaryVariant">@color/md_red_700</item>
+    </style>
+    <style name="Theme.Muflopping.RED.NoActionBar" parent="Theme.Muflopping.NoActionBar">
+        <item name="colorPrimary">@color/md_red_500</item>
+        <item name="colorPrimaryVariant">@color/md_red_700</item>
+    </style>
+
+    <!-- PINK -->
+    <style name="Theme.Muflopping.PINK" parent="Theme.Muflopping">
+        <item name="colorPrimary">@color/md_pink_500</item>
+        <item name="colorPrimaryVariant">@color/md_pink_700</item>
+    </style>
+    <style name="Theme.Muflopping.PINK.NoActionBar" parent="Theme.Muflopping.NoActionBar">
+        <item name="colorPrimary">@color/md_pink_500</item>
+        <item name="colorPrimaryVariant">@color/md_pink_700</item>
+    </style>
+
+    <!-- PURPLE -->
+    <style name="Theme.Muflopping.PURPLE" parent="Theme.Muflopping">
+        <item name="colorPrimary">@color/md_purple_500</item>
+        <item name="colorPrimaryVariant">@color/md_purple_700</item>
+    </style>
+    <style name="Theme.Muflopping.PURPLE.NoActionBar" parent="Theme.Muflopping.NoActionBar">
+        <item name="colorPrimary">@color/md_purple_500</item>
+        <item name="colorPrimaryVariant">@color/md_purple_700</item>
+    </style>
+
+    <!-- DEEP_PURPLE -->
+    <style name="Theme.Muflopping.DEEP_PURPLE" parent="Theme.Muflopping">
+        <item name="colorPrimary">@color/md_deep_purple_500</item>
+        <item name="colorPrimaryVariant">@color/md_deep_purple_700</item>
+    </style>
+    <style name="Theme.Muflopping.DEEP_PURPLE.NoActionBar" parent="Theme.Muflopping.NoActionBar">
+        <item name="colorPrimary">@color/md_deep_purple_500</item>
+        <item name="colorPrimaryVariant">@color/md_deep_purple_700</item>
+    </style>
+
+    <!-- INDIGO -->
+    <style name="Theme.Muflopping.INDIGO" parent="Theme.Muflopping">
+        <item name="colorPrimary">@color/md_indigo_500</item>
+        <item name="colorPrimaryVariant">@color/md_indigo_700</item>
+    </style>
+    <style name="Theme.Muflopping.INDIGO.NoActionBar" parent="Theme.Muflopping.NoActionBar">
+        <item name="colorPrimary">@color/md_indigo_500</item>
+        <item name="colorPrimaryVariant">@color/md_indigo_700</item>
+    </style>
+
+    <!-- BLUE -->
+    <style name="Theme.Muflopping.BLUE" parent="Theme.Muflopping">
+        <item name="colorPrimary">@color/md_blue_500</item>
+        <item name="colorPrimaryVariant">@color/md_blue_700</item>
+    </style>
+    <style name="Theme.Muflopping.BLUE.NoActionBar" parent="Theme.Muflopping.NoActionBar">
+        <item name="colorPrimary">@color/md_blue_500</item>
+        <item name="colorPrimaryVariant">@color/md_blue_700</item>
+    </style>
+
+    <!-- LIGHT_BLUE -->
+    <style name="Theme.Muflopping.LIGHT_BLUE" parent="Theme.Muflopping">
+        <item name="colorPrimary">@color/md_light_blue_500</item>
+        <item name="colorPrimaryVariant">@color/md_light_blue_700</item>
+    </style>
+    <style name="Theme.Muflopping.LIGHT_BLUE.NoActionBar" parent="Theme.Muflopping.NoActionBar">
+        <item name="colorPrimary">@color/md_light_blue_500</item>
+        <item name="colorPrimaryVariant">@color/md_light_blue_700</item>
+    </style>
+
+    <!-- CYAN -->
+    <style name="Theme.Muflopping.CYAN" parent="Theme.Muflopping">
+        <item name="colorPrimary">@color/md_cyan_500</item>
+        <item name="colorPrimaryVariant">@color/md_cyan_700</item>
+    </style>
+    <style name="Theme.Muflopping.CYAN.NoActionBar" parent="Theme.Muflopping.NoActionBar">
+        <item name="colorPrimary">@color/md_cyan_500</item>
+        <item name="colorPrimaryVariant">@color/md_cyan_700</item>
+    </style>
+
+    <!-- TEAL -->
+    <style name="Theme.Muflopping.TEAL" parent="Theme.Muflopping">
+        <item name="colorPrimary">@color/md_teal_500</item>
+        <item name="colorPrimaryVariant">@color/md_teal_700</item>
+    </style>
+    <style name="Theme.Muflopping.TEAL.NoActionBar" parent="Theme.Muflopping.NoActionBar">
+        <item name="colorPrimary">@color/md_teal_500</item>
+        <item name="colorPrimaryVariant">@color/md_teal_700</item>
+    </style>
+
+    <!-- GREEN -->
+    <style name="Theme.Muflopping.GREEN" parent="Theme.Muflopping">
+        <item name="colorPrimary">@color/md_green_500</item>
+        <item name="colorPrimaryVariant">@color/md_green_700</item>
+    </style>
+    <style name="Theme.Muflopping.GREEN.NoActionBar" parent="Theme.Muflopping.NoActionBar">
+        <item name="colorPrimary">@color/md_green_500</item>
+        <item name="colorPrimaryVariant">@color/md_green_700</item>
+    </style>
+
+    <!-- LIGHT_GREEN -->
+    <style name="Theme.Muflopping.LIGHT_GREEN" parent="Theme.Muflopping">
+        <item name="colorPrimary">@color/md_light_green_500</item>
+        <item name="colorPrimaryVariant">@color/md_light_green_700</item>
+    </style>
+    <style name="Theme.Muflopping.LIGHT_GREEN.NoActionBar" parent="Theme.Muflopping.NoActionBar">
+        <item name="colorPrimary">@color/md_light_green_500</item>
+        <item name="colorPrimaryVariant">@color/md_light_green_700</item>
+    </style>
+
+    <!-- LIME -->
+    <style name="Theme.Muflopping.LIME" parent="Theme.Muflopping">
+        <item name="colorPrimary">@color/md_lime_500</item>
+        <item name="colorPrimaryVariant">@color/md_lime_700</item>
+    </style>
+    <style name="Theme.Muflopping.LIME.NoActionBar" parent="Theme.Muflopping.NoActionBar">
+        <item name="colorPrimary">@color/md_lime_500</item>
+        <item name="colorPrimaryVariant">@color/md_lime_700</item>
+    </style>
+
+    <!-- YELLOW -->
+    <style name="Theme.Muflopping.YELLOW" parent="Theme.Muflopping">
+        <item name="colorPrimary">@color/md_yellow_500</item>
+        <item name="colorPrimaryVariant">@color/md_yellow_700</item>
+    </style>
+    <style name="Theme.Muflopping.YELLOW.NoActionBar" parent="Theme.Muflopping.NoActionBar">
+        <item name="colorPrimary">@color/md_yellow_500</item>
+        <item name="colorPrimaryVariant">@color/md_yellow_700</item>
+    </style>
+
+    <!-- AMBER -->
+    <style name="Theme.Muflopping.AMBER" parent="Theme.Muflopping">
+        <item name="colorPrimary">@color/md_amber_500</item>
+        <item name="colorPrimaryVariant">@color/md_amber_700</item>
+    </style>
+    <style name="Theme.Muflopping.AMBER.NoActionBar" parent="Theme.Muflopping.NoActionBar">
+        <item name="colorPrimary">@color/md_amber_500</item>
+        <item name="colorPrimaryVariant">@color/md_amber_700</item>
+    </style>
+
+    <!-- ORANGE -->
+    <style name="Theme.Muflopping.ORANGE" parent="Theme.Muflopping">
+        <item name="colorPrimary">@color/md_orange_500</item>
+        <item name="colorPrimaryVariant">@color/md_orange_700</item>
+    </style>
+    <style name="Theme.Muflopping.ORANGE.NoActionBar" parent="Theme.Muflopping.NoActionBar">
+        <item name="colorPrimary">@color/md_orange_500</item>
+        <item name="colorPrimaryVariant">@color/md_orange_700</item>
+    </style>
+
+    <!-- DEEP_ORANGE -->
+    <style name="Theme.Muflopping.DEEP_ORANGE" parent="Theme.Muflopping">
+        <item name="colorPrimary">@color/md_deep_orange_500</item>
+        <item name="colorPrimaryVariant">@color/md_deep_orange_700</item>
+    </style>
+    <style name="Theme.Muflopping.DEEP_ORANGE.NoActionBar" parent="Theme.Muflopping.NoActionBar">
+        <item name="colorPrimary">@color/md_deep_orange_500</item>
+        <item name="colorPrimaryVariant">@color/md_deep_orange_700</item>
+    </style>
+
+</resources>
