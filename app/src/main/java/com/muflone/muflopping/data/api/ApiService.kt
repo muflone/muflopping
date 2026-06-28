@@ -44,7 +44,10 @@ interface ApiService {
     suspend fun createList(@Body request: ListRequest): Response<ShoppingList>
 
     @GET("lists/{listId}/")
-    suspend fun getListDetail(@Path("listId") listId: Int): Response<ShoppingListDetail>
+    suspend fun getListDetail(@Path("listId") listId: Int): Response<ShoppingList>
+
+    @GET("lists/{listId}/items/")
+    suspend fun getListItems(@Path("listId") listId: Int): Response<List<Item>>
 
     @PUT("lists/{listId}/")
     suspend fun updateList(@Path("listId") listId: Int, @Body request: ListRequest): Response<ShoppingList>

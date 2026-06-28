@@ -5,6 +5,8 @@ import com.muflone.muflopping.data.api.RetrofitClient
 import com.muflone.muflopping.data.model.*
 import com.muflone.muflopping.util.SettingsManager
 import com.muflone.muflopping.util.TokenManager
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -28,13 +30,30 @@ class ShoppingRepository(
         }
     }
 
-    suspend fun getListDetail(listId: Int): Result<ShoppingListDetail> {
-        return try {
-            val response = getService().getListDetail(listId)
-            if (response.isSuccessful && response.body() != null) {
-                Result.success(response.body()!!)
+    suspend fun getListDetail(listId: Int): Result<ShoppingListDetail> = coroutineScope {
+        try {
+            val listDeferred = async { getService().getListDetail(listId) }
+            val itemsDeferred = async { getService().getListItems(listId) }
+
+            val listResponse = listDeferred.await()
+            val itemsResponse = itemsDeferred.await()
+
+            if (listResponse.isSuccessful && listResponse.body() != null &&
+                itemsResponse.isSuccessful && itemsResponse.body() != null
+            ) {
+                val shoppingList = listResponse.body()!!
+                Result.success(
+                    ShoppingListDetail(
+                        id = shoppingList.id,
+                        name = shoppingList.name,
+                        items = itemsResponse.body()!!,
+                        createdAt = shoppingList.createdAt,
+                        updatedAt = shoppingList.updatedAt
+                    )
+                )
             } else {
-                Result.failure(Exception("Failed to fetch list detail: ${response.code()}"))
+                val error = if (!listResponse.isSuccessful) listResponse.code() else itemsResponse.code()
+                Result.failure(Exception("Failed to fetch list detail: $error"))
             }
         } catch (e: Exception) {
             Result.failure(e)
