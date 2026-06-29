@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.muflone.muflopping"
-    compileSdk = 34 // Changed from 36 as 34 is more stable for general use, though original had 36.
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.muflone.muflopping"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
