@@ -9,6 +9,9 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -42,12 +45,21 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: ShoppingListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        ThemeUtils.applyTheme(this)
+        ThemeUtils.applyTheme(this, noActionBar = true)
         ThemeUtils.updateLastTheme(this)
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.toolbar)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom)
+            binding.appBarLayout.setPadding(0, systemBars.top, 0, 0)
+            insets
+        }
         setupRecyclerView()
         observeViewModel()
 

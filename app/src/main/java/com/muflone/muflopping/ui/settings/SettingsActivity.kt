@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.muflone.muflopping.databinding.ActivitySettingsBinding
 import com.muflone.muflopping.util.SettingsManager
@@ -21,11 +24,21 @@ class SettingsActivity : AppCompatActivity() {
         settingsManager = SettingsManager(this)
         selectedThemeColor = settingsManager.getThemeColor()
         
-        ThemeUtils.applyTheme(this)
+        ThemeUtils.applyTheme(this, noActionBar = true)
         super.onCreate(savedInstanceState)
         
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.settingsRoot) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         title = "Settings"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

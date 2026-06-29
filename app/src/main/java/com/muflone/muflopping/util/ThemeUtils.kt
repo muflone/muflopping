@@ -1,6 +1,9 @@
 package com.muflone.muflopping.util
 
 import android.app.Activity
+import android.os.Build
+import android.view.View
+import androidx.core.view.WindowInsetsControllerCompat
 import com.muflone.muflopping.R
 
 object ThemeUtils {
@@ -10,6 +13,13 @@ object ThemeUtils {
         val settingsManager = SettingsManager(activity)
         val colorName = settingsManager.getThemeColor()
         activity.setTheme(getThemeId(colorName, noActionBar))
+        
+        val window = activity.window
+        val decorView = window.decorView
+        val wic = WindowInsetsControllerCompat(window, decorView)
+        
+        // Icone chiare per la barra di stato
+        wic.isAppearanceLightStatusBars = false
     }
 
     fun isThemeChanged(activity: Activity): Boolean {
@@ -63,6 +73,28 @@ object ThemeUtils {
             "ORANGE" -> R.color.md_orange_500
             "DEEP_ORANGE" -> R.color.md_deep_orange_500
             else -> R.color.md_purple_500
+        }
+    }
+
+    fun getColorVariantResource(colorName: String): Int {
+        return when (colorName) {
+            "RED" -> R.color.md_red_700
+            "PINK" -> R.color.md_pink_700
+            "PURPLE" -> R.color.md_purple_700
+            "DEEP_PURPLE" -> R.color.md_deep_purple_700
+            "INDIGO" -> R.color.md_indigo_700
+            "BLUE" -> R.color.md_blue_700
+            "LIGHT_BLUE" -> R.color.md_light_blue_700
+            "CYAN" -> R.color.md_cyan_700
+            "TEAL" -> R.color.md_teal_700
+            "GREEN" -> R.color.md_green_700
+            "LIGHT_GREEN" -> R.color.md_light_green_700
+            "LIME" -> R.color.md_lime_700
+            "YELLOW" -> R.color.md_yellow_700
+            "AMBER" -> R.color.md_amber_700
+            "ORANGE" -> R.color.md_orange_700
+            "DEEP_ORANGE" -> R.color.md_deep_orange_700
+            else -> R.color.md_purple_700
         }
     }
 

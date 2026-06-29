@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
@@ -19,16 +22,27 @@ class ListDetailActivity : AppCompatActivity() {
     private var listId: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        ThemeUtils.applyTheme(this)
+        ThemeUtils.applyTheme(this, noActionBar = true)
         ThemeUtils.updateLastTheme(this)
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         binding = ActivityListDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.listDetailRoot) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom)
+            binding.appBarLayout.setPadding(0, systemBars.top, 0, 0)
+            insets
+        }
         listId = intent.getIntExtra(EXTRA_LIST_ID, -1)
         val listName = intent.getStringExtra(EXTRA_LIST_NAME)
-        title = listName ?: "List Detail"
         
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.title = listName ?: "List Detail"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         if (listId == -1) {
